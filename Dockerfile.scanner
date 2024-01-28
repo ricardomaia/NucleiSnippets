@@ -41,6 +41,7 @@ ENV PATH $PATH:$GOPATH/bin:$GOOROOT/bin:$PDTM_PATH
 # Project Discovery
 RUN go install -v github.com/projectdiscovery/pdtm/cmd/pdtm@latest
 RUN pdtm -ia
+RUN nuclei -update-templates
 
 # Anew
 RUN go install -v github.com/tomnomnom/anew@latest
