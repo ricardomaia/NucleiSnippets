@@ -2,14 +2,13 @@ version: "3"
 
 services:
   scanner:
-    #build:
-    #context: .
-    #dockerfile: Dockerfile.scanner
+    build:
+      context: .
+      dockerfile: Dockerfile.scanner
     container_name: nuclei-snippets-scanner
     working_dir: ${BASE_DIR}
     restart: always
-    #image: nuclei-snippets-scanner
-    image: projectdiscovery/nuclei:latest
+    image: nuclei-snippets-scanner
     stdin_open: true
     tty: true
     volumes:

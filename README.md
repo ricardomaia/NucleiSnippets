@@ -32,7 +32,7 @@ To dive into the world of NucleiSnippets, follow these steps:
    git clone https://github.com/ricardomaia/NucleiSnippets.git
    cd NucleiSnippets
    docker-compose up -d
-   docker exec -it nuclei-snippets-scanner nuclei -t /nuclei-snippets/templates -u http://target.local
+   docker exec -it nuclei-snippets-scanner nuclei -t /nuclei-snippets/templates -u http://host.docker.internal:1337 -nh -vv -v
 ```
 
 ## Examples
@@ -40,5 +40,5 @@ To dive into the world of NucleiSnippets, follow these steps:
 ### HTTP
 
 ```bash
-docker exec -it nuclei-snippets-scanner nuclei -t /nuclei-snippets/templates/_http.yaml -u http://target.local -nh -vv -debug
+docker exec -it nuclei-snippets-scanner nuclei -t /nuclei-snippets/templates/_http.yaml -u http://host.docker.internal:1337 -nh -vv -v
 ```

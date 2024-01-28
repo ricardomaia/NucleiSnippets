@@ -26,6 +26,7 @@ RUN apt install python3 -y
 RUN apt install python3-pip -y
 RUN apt install vim -y
 RUN apt install iputils-ping -y
+RUN apt install libnss3 libatk1.0-0 libatk-bridge2.0-0 libx11-xcb1 libxcb-dri3-0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 libasound2 libpangocairo-1.0-0 libgtk-3-0 -y
 
 # Golang
 RUN wget https://go.dev/dl/go1.21.5.linux-amd64.tar.gz
