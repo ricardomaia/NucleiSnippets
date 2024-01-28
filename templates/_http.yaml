@@ -1,0 +1,44 @@
+id: base_template_html
+
+info:
+  name: Base Template HTML
+  description: Template description comes here.
+  author: ricardomaia
+  severity: info
+  reference:
+    - https://ricardomaia.eti.br
+    - https://nvd.nist.gov/vuln/detail/cve-2022-XXXX
+  classification:
+    cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N # https://www.first.org/cvss/calculator/3.0
+    cvss-score: 0.0
+    cve-id: CVE-2022-XXXX
+    cwe-id: CWE-200
+  remediation: "Actions to fix or mitigate"
+  metadata:
+    shodan-query: http.html:"Base Template"
+    google-query: inurl:page.php "Base Template"
+  tags: tech,info,base,template
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/"
+
+    redirects: true
+    max-redirects: 2
+
+    stop-at-first-match: true
+    matchers-condition: or # one of matchers - regex or word
+    matchers:
+      - type: regex
+        regex:
+          - "(?i)regex.match"
+          -
+      - type: word
+        part: body
+        case-insensitive: true
+        words:
+          - "word1"
+          - "word2"
+        condition: and # both words
+

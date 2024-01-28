@@ -1,0 +1,6 @@
+# Cartão de Crédito
+5208346446186955    # Mastercard
+4941542950133079    # Visa
+371017636831807     # American Express
+6011092914075008    # Discover
+36316103381628      # Diners Club

@@ -1,0 +1,48 @@
+FROM ubuntu:latest AS nuclei-snippets-scanner
+WORKDIR /nuclei-snippets
+
+# Install dependencies
+RUN apt update && apt install -y bash
+RUN apt install -y ca-certificates && update-ca-certificates
+
+# libpcap-dev required by naabu
+RUN apt install libpcap-dev -y
+
+# Basic tools
+RUN apt install curl -y
+RUN apt install wget -y
+RUN apt install unzip -y
+RUN apt install zip -y
+RUN apt install git -y
+RUN apt install dnsutils -y
+RUN apt install jq -y
+RUN apt install grepcidr -y
+RUN apt install netcat -y
+RUN apt install net-tools -y
+RUN apt install nmap -y
+RUN apt install perl -y
+RUN apt install libnet-ssleay-perl -y
+RUN apt install python3 -y
+RUN apt install python3-pip -y
+RUN apt install vim -y
+RUN apt install iputils-ping -y
+
+# Golang
+RUN wget https://go.dev/dl/go1.21.5.linux-amd64.tar.gz
+RUN tar -C /usr/local -xzf go1.21.5.linux-amd64.tar.gz
+RUN rm go1.21.5.linux-amd64.tar.gz
+ENV HOME /root
+ENV GOOROOT /usr/local/go
+ENV GOPATH $HOME/go
+ENV PDTM_PATH $HOME/.pdtm/go/bin
+ENV PATH $PATH:$GOPATH/bin:$GOOROOT/bin:$PDTM_PATH
+
+# Project Discovery
+RUN go install -v github.com/projectdiscovery/pdtm/cmd/pdtm@latest
+RUN pdtm -ia
+
+# Anew
+RUN go install -v github.com/tomnomnom/anew@latest
+
+# Cache & Config Directory
+RUN mkdir -p /root/.cache/nuclei
