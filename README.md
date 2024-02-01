@@ -7,7 +7,7 @@
  / / / / /_/ / /__/ /  __/ /  (__  ) / / / / /_/ / /_/ /  __/ /_(__  )
 /_/ /_/\__,_/\___/_/\___/_/  /____/_/ /_/_/ .___/ .___/\___/\__/____/
                                          /_/   /_/
-</pre>  
+</pre>
 
 ## Overview
 
@@ -40,5 +40,37 @@ To dive into the world of NucleiSnippets, follow these steps:
 ### HTTP
 
 ```bash
-docker exec -it nuclei-snippets-scanner nuclei -t /nuclei-snippets/templates/_http.yaml -u http://host.docker.internal:1337 -nh -vv -v
+docker exec -it nuclei-snippets-scanner nuclei -t /nuclei-snippets/templates/http.yaml -u http://target.local -nh -vv -v
 ```
+
+### CVE-2024-XXXX
+
+The passphrase for the private key in this project is an empty string ``.
+
+By default, Nuclei ignore template execution with tags: "fuzz", "dos", "local" or "privesc".
+
+To execute this template, you need set the flag `-itags` (include tags) for "local" and "privesc". For code templates you need to include the flag `-code` as well.
+
+So the complete command to execute the template is:
+
+```bash
+docker exec -it nuclei-snippets-scanner nuclei -t /nuclei-snippets/templates/cve-2024-XXXX.yaml -vv -v -code -itags local -itags privesc -debug
+```
+
+## Roadmap
+
+- [x] Create a Docker environment to test the templates
+- [ ] API consuption template
+  - [ ] IP Reputation
+  - [ ] Phishing URL
+  - [ ] Site Health
+- [ ] Data Leak
+  - [ ] PII
+  - [ ] Financial
+  - [ ] Confidential documents
+  - [ ] Credentials
+  - [ ] API Keys
+  - [ ] Sensible database information
+- [ ] Forensics
+  - [ ] Windows Registry
+  - [ ] Linux Logs

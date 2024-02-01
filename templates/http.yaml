@@ -22,12 +22,12 @@ info:
 http:
   - method: GET
     path:
-      - "{{BaseURL}}/"
+      - "{{BaseURL}}"
 
     redirects: true
     max-redirects: 2
 
-    stop-at-first-match: true
+    stop-at-first-match: false
     matchers-condition: or # one of matchers - regex or word
     matchers:
       - type: regex
@@ -42,3 +42,23 @@ http:
           - "word2"
         condition: and # both words
 
+    extractors:
+      - type: regex # "word", "regex", "binary", "status", "size", "dsl"
+        part: body # "body", "request", "response", "matched", "status-code", "raw" "content-lenght", "header", "all-headers", "header-name"
+        name: version
+        group: 1
+        regex:
+          - '(?i)version.((\d+\.)?(\d+\.)?(\*|\d+))'
+
+      - type: regex
+        part: body
+        name: matched_words
+        internal: true
+        regex:
+          - "(?i)word1|word2"
+
+      - type: dsl # "word", "regex", "binary", "status", "size", "dsl"
+        part: body # "body", "request", "response", "matched", "status-code", "raw" "content-lenght", "header", "all-headers", "header-name"
+        name: word1_found
+        dsl:
+          - contains(matched_words, "Word1")

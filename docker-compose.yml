@@ -15,15 +15,11 @@ services:
       - ./templates:${TEMPLATES_DIR}
       - ./shared:${SHARED_DIR}
       - ./container/scripts:${SCRIPTS_DIR}
+      - ./keys:/root/.config/nuclei/keys
     env_file:
       - .env
     ports:
       - "9092:9092"
-    networks:
-      scanner_network:
-        ipv4_address: "172.25.0.2"
-    extra_hosts:
-      - "target.local:172.25.0.3"
 
   apache:
     image: "php:7.2-apache"
@@ -36,9 +32,6 @@ services:
     volumes:
       - ./container/php:/var/www/html
       - ./shared:/shared
-    networks:
-      scanner_network:
-        ipv4_address: "172.25.0.3"
 
   smtp4dev:
     container_name: nuclei-snippets-smtp
@@ -49,9 +42,6 @@ services:
     ports:
       - 2525:25
       - 1080:80
-    networks:
-      scanner_network:
-        ipv4_address: "172.25.0.4"
 
   endlessh:
     image: lscr.io/linuxserver/endlessh:latest
@@ -63,14 +53,3 @@ services:
     ports:
       - 22:2222
     restart: unless-stopped
-    networks:
-      scanner_network:
-        ipv4_address: "172.25.0.5"
-
-networks:
-  scanner_network:
-    ipam:
-      driver: default
-      config:
-        - subnet: "172.25.0.0/16"
-          gateway: "172.25.0.1"

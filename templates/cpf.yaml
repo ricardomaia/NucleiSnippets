@@ -1,0 +1,40 @@
+id: cpf-extractor
+
+info:
+  name: CPF Extractor
+  author: ricardomaia
+  severity: info
+  tags: misc,cpf,pii,privacy,lgpd,gdpr
+
+flow: http(1) && http(2)
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/contact.php"
+
+    extractors:
+      - type: regex
+        name: cpf_extracted
+        internal: true
+        part: body
+        regex:
+          - '\d{3}\.\d{3}\.\d{3}\-\d{2}' # CPF
+          - '\d{3}\d{3}\d{3}\-\d{2}' # CPF
+          - '\b\d{11}\b' # CPF
+
+    matchers:
+      - type: regex
+        regex:
+          - '\d{3}\.\d{3}\.\d{3}\-\d{2}' # CPF
+          - '\d{3}\d{3}\d{3}\-\d{2}' # CPF
+          - '\b\d{11}\b' # CPF
+
+  - method: GET
+    path:
+      - "https://api.nfse.io/validate/NaturalPeople/taxNumber/{{cpf_extracted}}"
+
+    matchers:
+      - type: dsl
+        dsl:
+          - contains(valid, 'true')
