@@ -1,50 +1,61 @@
 FROM ubuntu:latest AS nuclei-snippets-scanner
 WORKDIR /nuclei-snippets
 
-# Install dependencies
-RUN apt update && apt install -y bash
-RUN apt install -y ca-certificates && update-ca-certificates
-
-# libpcap-dev required by naabu
-RUN apt install libpcap-dev -y
-
-# Basic tools
-RUN apt install curl -y
-RUN apt install wget -y
-RUN apt install unzip -y
-RUN apt install zip -y
-RUN apt install git -y
-RUN apt install dnsutils -y
-RUN apt install jq -y
-RUN apt install grepcidr -y
-RUN apt install netcat -y
-RUN apt install net-tools -y
-RUN apt install nmap -y
-RUN apt install perl -y
-RUN apt install libnet-ssleay-perl -y
-RUN apt install python3 -y
-RUN apt install python3-pip -y
-RUN apt install vim -y
-RUN apt install iputils-ping -y
-RUN apt install libnss3 libatk1.0-0 libatk-bridge2.0-0 libx11-xcb1 libxcb-dri3-0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 libasound2 libpangocairo-1.0-0 libgtk-3-0 -y
+# Install dependencies and basic tools in a single layer
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    bash \
+    ca-certificates \
+    curl \
+    dnsutils \
+    git \
+    grepcidr \
+    iputils-ping \
+    jq \
+    libasound2t64 \
+    libatk-bridge2.0-0 \
+    libatk1.0-0 \
+    libgbm1 \
+    libgtk-3-0 \
+    libnet-ssleay-perl \
+    libnss3 \
+    libpangocairo-1.0-0 \
+    # libpcap-dev required by naabu
+    libpcap-dev \
+    libx11-xcb1 \
+    libxcb-dri3-0 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxfixes3 \
+    libxrandr2 \
+    net-tools \
+    netcat-openbsd \
+    nmap \
+    perl \
+    python3 \
+    python3-pip \
+    unzip \
+    vim \
+    wget \
+    zip \
+    && update-ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
 # Golang
-RUN wget https://go.dev/dl/go1.21.5.linux-amd64.tar.gz
-RUN tar -C /usr/local -xzf go1.21.5.linux-amd64.tar.gz
-RUN rm go1.21.5.linux-amd64.tar.gz
-ENV HOME /root
-ENV GOOROOT /usr/local/go
-ENV GOPATH $HOME/go
-ENV PDTM_PATH $HOME/.pdtm/go/bin
-ENV PATH $PATH:$GOPATH/bin:$GOOROOT/bin:$PDTM_PATH
+ENV HOME=/root
+ENV GOROOT=/usr/local/go
+ENV GOPATH=$HOME/go
+ENV PDTM_PATH=$HOME/.pdtm/go/bin
+ENV PATH=$PATH:$GOPATH/bin:$GOROOT/bin:$PDTM_PATH
 
-# Project Discovery
-RUN go install -v github.com/projectdiscovery/pdtm/cmd/pdtm@latest
-RUN pdtm -ia
-RUN nuclei -update-templates
+RUN wget -q https://go.dev/dl/go1.23.6.linux-amd64.tar.gz \
+    && tar -C /usr/local -xzf go1.23.6.linux-amd64.tar.gz \
+    && rm go1.23.6.linux-amd64.tar.gz
 
-# Anew
-RUN go install -v github.com/tomnomnom/anew@latest
+# Project Discovery + Anew
+RUN go install -v github.com/projectdiscovery/pdtm/cmd/pdtm@latest \
+    && pdtm -ia \
+    && nuclei -update-templates \
+    && go install -v github.com/tomnomnom/anew@latest
 
 # Cache & Config Directory
 RUN mkdir -p /root/.cache/nuclei

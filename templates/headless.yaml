@@ -4,6 +4,7 @@ info:
   name: Headless Template HTML
   description: Headless Template description comes here.
   author: ricardomaia
+  severity: info
 
 headless:
   - steps:
